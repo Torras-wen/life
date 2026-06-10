@@ -107,10 +107,9 @@ const { data } = entry;
 						<h2>这一路的照片</h2>
 					</div>
 					<div class="photo-grid">
-						{data.gallery.map((g) => (
+						{data.gallery.map((src) => (
 							<figure class="photo">
-								<img src={g.image} alt={g.caption || ''} loading="lazy" decoding="async" />
-								{g.caption && <figcaption>{g.caption}</figcaption>}
+								<img src={src} alt="" loading="lazy" decoding="async" />
 							</figure>
 						))}
 					</div>

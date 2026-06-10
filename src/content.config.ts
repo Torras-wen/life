@@ -40,17 +40,8 @@ export const collections = {
 					}),
 				)
 				.default([]),
-			/** 多图画廊 —— 一篇可放很多张照片。 */
-			gallery: z
-				.array(
-					z.object({
-						/** 图片路径（后台上传后填入）。 */
-						image: z.string(),
-						/** 图说（可选）。 */
-						caption: z.string().optional(),
-					}),
-				)
-				.default([]),
+			/** 多图相册 —— 一篇可批量上传很多张照片（图片路径数组）。 */
+			gallery: z.array(z.string()).default([]),
 			/** 是否在首页作为「最新一程」精选。 */
 			featured: z.boolean().default(false),
 		}),

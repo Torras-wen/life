@@ -122,14 +122,10 @@ collections:
 
       - label: 多图相册
         name: gallery
-        widget: list
+        widget: image
         required: false
-        label_singular: 一张照片
-        summary: '{{fields.caption}}'
-        hint: 一篇可以传很多张照片，会以瓀布流画廊展示
-        fields:
-          - { label: 照片, name: image, widget: image }
-          - { label: 图说, name: caption, widget: string, required: false }
+        multiple: true
+        hint: 可以一次选中多张照片批量上传，会以瓀布流画廊展示
 
       - label: 正文
         name: body
