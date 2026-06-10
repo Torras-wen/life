@@ -17,12 +17,12 @@ export interface Cover {
 // 旅行色板 —— 以海松绿 / 潟湖青 / 天空蓝为主，
 // 辅以两组「黄金时刻」暖色，制造节奏与温度。
 const RECIPES = [
-	{ base: 172, spread: 16 }, // 海松绿 teal
-	{ base: 190, spread: 18 }, // 潟湖青 lagoon
-	{ base: 204, spread: 16 }, // 天空蓝 sky
-	{ base: 158, spread: 14 }, // 松石 / 翡翠 jade
-	{ base: 32, spread: 14 }, // 夕照金 sunset gold
-	{ base: 18, spread: 14 }, // 暮色珊瑚 dusk coral
+	{ base: 348, spread: 12 }, // 勃艮第酒红 burgundy
+	{ base: 356, spread: 10 }, // 玖瑰酒红 wine rose
+	{ base: 16, spread: 12 }, // 陶土赭 terracotta
+	{ base: 28, spread: 12 }, // 暖棕褐 umber
+	{ base: 36, spread: 8 }, // 金赭 ochre
+	{ base: 340, spread: 12 }, // 深莓 mulberry
 ];
 
 /** FNV-1a 哈希 —— 在 SSR / build 间保持一致。 */
@@ -50,8 +50,8 @@ export function cover(seed: string): Cover {
 		[84, 74],
 	];
 	const hues = [base - spread, base - spread * 0.2, base + spread * 0.5, base + spread];
-	const sats = [70, 78, 62, 56];
-	const lums = [56, 50, 45, 38];
+	const sats = [60, 66, 52, 44];
+	const lums = [44, 38, 32, 24];
 
 	const layers = anchors.map((a, i) => {
 		const jx = ((h >> (i * 3)) % 13) - 6;

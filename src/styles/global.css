@@ -11,41 +11,41 @@
 	color-scheme: light;
 
 	/* 品牌 —— 海松绿主色 + 夕照橘点缀 */
-	--accent: #0e7c70;
-	--accent-hover: #0a6056;
-	--accent-soft: rgba(14, 124, 112, 0.1);
-	--accent-contrast: #fbfbf8;
-	--sun: #df8a3c;
-	--sun-soft: rgba(223, 138, 60, 0.14);
+	--accent: #7c2e3a;
+	--accent-hover: #682530;
+	--accent-soft: rgba(124, 46, 58, 0.08);
+	--accent-contrast: #f6f3ee;
+	--sun: #b07a45;
+	--sun-soft: rgba(176, 122, 69, 0.14);
 	/* 恋爱点缀 —— 胭脂玖瑰，给二人的记事加一抹甜 */
-	--love: #e0607e;
-	--love-hover: #d24b6c;
-	--love-soft: rgba(224, 96, 126, 0.12);
+	--love: #a8475a;
+	--love-hover: #8e3848;
+	--love-soft: rgba(168, 71, 90, 0.1);
 
 	/* 表面与文字（浅色） */
-	--bg: #f7f5ef;
-	--bg-subtle: #eeebe0;
-	--surface: #ffffff;
-	--surface-hover: #f4f1e8;
-	--text: #16201d;
-	--text-muted: #5d6661;
-	--text-faint: #969c92;
-	--border: #e4dfd2;
-	--border-strong: #d3cdbb;
-	--selection: rgba(14, 124, 112, 0.16);
-	--noise-opacity: 0.035;
+	--bg: #f4f1eb;
+	--bg-subtle: #e8e3d9;
+	--surface: #fcfaf6;
+	--surface-hover: #efebe2;
+	--text: #1b1714;
+	--text-muted: #645c54;
+	--text-faint: #a39a8d;
+	--border: #e0dacd;
+	--border-strong: #c9beac;
+	--selection: rgba(124, 46, 58, 0.14);
+	--noise-opacity: 0.026;
 
 	/* 圆角 */
-	--radius-sm: 8px;
-	--radius: 14px;
-	--radius-lg: 24px;
-	--radius-xl: 32px;
+	--radius-sm: 4px;
+	--radius: 8px;
+	--radius-lg: 16px;
+	--radius-xl: 24px;
 	--radius-pill: 999px;
 
-	/* 阴影 —— 中性微冷 */
-	--shadow-sm: 0 1px 2px rgba(20, 40, 36, 0.05), 0 2px 6px rgba(20, 40, 36, 0.06);
-	--shadow: 0 6px 16px rgba(20, 40, 36, 0.08), 0 18px 40px rgba(20, 40, 36, 0.1);
-	--shadow-lg: 0 18px 48px rgba(12, 28, 24, 0.16), 0 36px 80px rgba(12, 28, 24, 0.14);
+	/* 阴影 —— 收敛、暖灰调 */
+	--shadow-sm: 0 1px 2px rgba(28, 22, 18, 0.04), 0 1px 3px rgba(28, 22, 18, 0.05);
+	--shadow: 0 4px 14px rgba(28, 22, 18, 0.06), 0 12px 32px rgba(28, 22, 18, 0.08);
+	--shadow-lg: 0 18px 50px rgba(20, 14, 10, 0.13), 0 40px 80px rgba(20, 14, 10, 0.1);
 
 	/* 布局 */
 	--container: 720px;
@@ -69,31 +69,31 @@
 :root[data-theme='dark'] {
 	color-scheme: dark;
 
-	--accent: #4fd6c4;
-	--accent-hover: #6fe2d3;
-	--accent-soft: rgba(79, 214, 196, 0.14);
-	--accent-contrast: #0c1413;
-	--sun: #f0a35a;
-	--sun-soft: rgba(240, 163, 90, 0.16);
-	--love: #f6849e;
-	--love-hover: #ffa0b6;
-	--love-soft: rgba(246, 132, 158, 0.18);
+	--accent: #d36b78;
+	--accent-hover: #e4828d;
+	--accent-soft: rgba(211, 107, 120, 0.15);
+	--accent-contrast: #1f1512;
+	--sun: #cd9a5e;
+	--sun-soft: rgba(205, 154, 94, 0.16);
+	--love: #de8090;
+	--love-hover: #ee98a6;
+	--love-soft: rgba(222, 128, 144, 0.18);
 
-	--bg: #0c1413;
-	--bg-subtle: #111c1a;
-	--surface: #14201e;
-	--surface-hover: #1a2826;
-	--text: #e8ece6;
-	--text-muted: #9aa39c;
-	--text-faint: #6b746d;
-	--border: #243230;
-	--border-strong: #324340;
-	--selection: rgba(79, 214, 196, 0.22);
-	--noise-opacity: 0.05;
+	--bg: #14100e;
+	--bg-subtle: #1b1512;
+	--surface: #1f1815;
+	--surface-hover: #28201b;
+	--text: #efe9e0;
+	--text-muted: #a89f93;
+	--text-faint: #6f665b;
+	--border: #322a24;
+	--border-strong: #473b32;
+	--selection: rgba(211, 107, 120, 0.24);
+	--noise-opacity: 0.045;
 
 	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
-	--shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
-	--shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.6);
+	--shadow: 0 8px 24px rgba(0, 0, 0, 0.52);
+	--shadow-lg: 0 22px 54px rgba(0, 0, 0, 0.62);
 }
 
 /* ------------------------------------------------------------------ */
