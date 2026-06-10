@@ -45,15 +45,15 @@ const daysTogether = Math.max(
 			<dl class="stat-strip" data-reveal>
 				<div class="stat">
 					<dt>记录</dt>
-					<dd>{entries.length}<span>段</span></dd>
+					<dd><span class="stat-num" data-count={entries.length}>{entries.length}</span><span>段</span></dd>
 				</div>
 				<div class="stat">
 					<dt>去过</dt>
-					<dd>{placeCount}<span>处</span></dd>
+					<dd><span class="stat-num" data-count={placeCount}>{placeCount}</span><span>处</span></dd>
 				</div>
 				<div class="stat">
 					<dt>主题</dt>
-					<dd>{tagCount}<span>类</span></dd>
+					<dd><span class="stat-num" data-count={tagCount}>{tagCount}</span><span>类</span></dd>
 				</div>
 				{
 					featured && (

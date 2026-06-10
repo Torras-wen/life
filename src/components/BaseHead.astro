@@ -30,6 +30,10 @@ const fullTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`;
 					: 'light';
 		document.documentElement.dataset.theme = theme;
 		document.documentElement.classList.add('js');
+		// 本会话已访问过则跳过进场动画（避免每次导航都重播）
+		try {
+			if (sessionStorage.getItem('visited')) document.documentElement.classList.add('visited');
+		} catch (e) {}
 	})();
 </script>
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f1eb" />

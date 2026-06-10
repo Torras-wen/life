@@ -17,6 +17,13 @@ const { title, description } = Astro.props;
 		<BaseHead title={title} description={description} />
 	</head>
 	<body>
+		<!-- 氛围光晕（随主题色的柔和极光） -->
+		<div class="aurora" aria-hidden="true">
+			<span class="aurora__blob aurora__blob--1"></span>
+			<span class="aurora__blob aurora__blob--2"></span>
+			<span class="aurora__blob aurora__blob--3"></span>
+		</div>
+
 		<Header />
 		<slot />
 		<Footer />
@@ -28,6 +35,21 @@ const { title, description } = Astro.props;
 				<circle class="bar" cx="22" cy="22" r="20" style="--circ:125.6"></circle>
 			</svg>
 			<span class="pct" id="scroll-pct">0</span>
+		</div>
+
+		<!-- 自定义磁性光标 -->
+		<div class="cursor" id="cursor" aria-hidden="true">
+			<span class="cursor__dot"></span>
+			<span class="cursor__ring"></span>
+		</div>
+
+		<!-- 进场加载动画 -->
+		<div class="preloader" id="preloader" aria-hidden="true">
+			<div class="preloader__inner">
+				<span class="preloader__names">WJ <span class="preloader__heart">♥</span> GB</span>
+				<span class="preloader__bar"><span class="preloader__fill" id="preloader-fill"></span></span>
+				<span class="preloader__pct" id="preloader-pct">0</span>
+			</div>
 		</div>
 	</body>
 </html>
