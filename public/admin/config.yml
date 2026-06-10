@@ -84,6 +84,13 @@ collections:
         required: false
         hint: 一行字，如「冷，但天很蓝」
 
+      - label: 谁写的
+        name: author
+        widget: select
+        required: false
+        options: ['WJ', 'GB', '一起']
+        hint: 这篇日志主要由谁记录，会显示一个小标签
+
       - label: 首页精选
         name: featured
         widget: boolean

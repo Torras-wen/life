@@ -33,6 +33,13 @@ const people = [
 		d: '总能找到巷子里最好吃的那家，也总在当天把心情写下来。这本册子里温柔的句子，多半出自她手。',
 	},
 ];
+
+// 难忘的日子。日期、标题、描述都可以随意改 / 增减。
+const milestones = [
+	{ date: '2025.11.16', t: '在一起', d: '从这一天起，世界多了一个一定要分享的人。' },
+	{ date: '第一次同行', t: '一起出发', d: '第一次为了对方，把行李塞进同一个后备箱。' },
+	{ date: '未完待续', t: '想去的远方', d: '清单上还有很多地方，等我们一个一个走过。' },
+];
 ---
 
 <BaseLayout title="关于" description="关于这本记录生活与旅行的册子。">
@@ -92,19 +99,50 @@ const people = [
 			<div class="rule" data-reveal><span class="kicker">我们是谁</span></div>
 			<div class="duo-grid">
 				{
-					people.map((p) => (
-						<div class="person-card" data-reveal>
-							<span class="person-badge">{p.initial}</span>
-							<div class="person-info">
-								<h3>{p.name}</h3>
-								<span class="person-role">{p.role}</span>
-								<p>{p.d}</p>
+					people.map((p, i) => (
+						<>
+							<div class="person-card" data-reveal>
+								<span class="person-badge">{p.initial}</span>
+								<div class="person-info">
+									<h3>{p.name}</h3>
+									<span class="person-role">{p.role}</span>
+									<p>{p.d}</p>
+								</div>
 							</div>
-						</div>
+							{i === 0 && (
+								<span class="duo-heart heart" aria-hidden="true">
+									♥
+								</span>
+							)}
+						</>
 					))
 				}
 			</div>
-			<p class="duo-note" data-reveal>WJ &amp; GB —— 一个负责出发，一个负责记得。</p>
+			<p class="duo-note" data-reveal>
+				WJ <span class="heart" aria-hidden="true">♥</span> GB —— 一个负责出发，一个负责记得。
+			</p>
+		</section>
+
+		<section class="timeline-sec">
+			<div class="rule" data-reveal>
+				<span class="kicker">我们的纪念日</span>
+			</div>
+			<ol class="timeline">
+				{
+					milestones.map((m) => (
+						<li class="milestone" data-reveal>
+							<span class="milestone-mark" aria-hidden="true">
+								<span class="heart">♥</span>
+							</span>
+							<div class="milestone-body">
+								<span class="milestone-date">{m.date}</span>
+								<span class="milestone-title">{m.t}</span>
+								<span class="milestone-desc">{m.d}</span>
+							</div>
+						</li>
+					))
+				}
+			</ol>
 		</section>
 
 		{
@@ -249,11 +287,18 @@ const people = [
 		margin-top: 5rem;
 	}
 	.duo-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
 		gap: 1.5rem;
 	}
+	.duo-heart {
+		flex: none;
+		font-size: 2rem;
+	}
 	.person-card {
+		flex: 1 1 300px;
 		display: flex;
 		gap: 1.2rem;
 		align-items: flex-start;
@@ -306,6 +351,57 @@ const people = [
 		font-family: var(--font-serif);
 		font-style: italic;
 		font-size: 1.05rem;
+		color: var(--text-muted);
+	}
+
+	/* 我们的纪念日 · 时间线 */
+	.timeline-sec {
+		margin-top: 5rem;
+	}
+	.timeline {
+		list-style: none;
+		margin: 2rem 0 0;
+		padding: 0;
+		max-width: var(--container);
+		border-left: 2px solid var(--border);
+	}
+	.milestone {
+		position: relative;
+		padding: 0 0 2.2rem 1.9rem;
+	}
+	.milestone:last-child {
+		padding-bottom: 0;
+	}
+	.milestone-mark {
+		position: absolute;
+		left: -0.72rem;
+		top: 0.05rem;
+		width: 1.4rem;
+		height: 1.4rem;
+		display: grid;
+		place-items: center;
+		font-size: 0.82rem;
+		background: var(--bg);
+		border-radius: 50%;
+	}
+	.milestone-date {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 0.74rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--love);
+	}
+	.milestone-title {
+		display: block;
+		margin: 0.35rem 0 0.35rem;
+		font-family: var(--font-serif);
+		font-size: 1.4rem;
+		font-weight: 560;
+		color: var(--text);
+	}
+	.milestone-desc {
+		display: block;
 		color: var(--text-muted);
 	}
 
@@ -368,9 +464,6 @@ const people = [
 
 	@media (max-width: 760px) {
 		.record-grid {
-			grid-template-columns: 1fr;
-		}
-		.duo-grid {
 			grid-template-columns: 1fr;
 		}
 	}

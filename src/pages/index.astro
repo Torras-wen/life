@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Cover from '../components/Cover.astro';
 import JournalCard from '../components/JournalCard.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import { SITE_DESCRIPTION } from '../consts';
+import { SITE_DESCRIPTION, TOGETHER_SINCE, LOVE_QUOTE } from '../consts';
 
 const entries = (await getCollection('journal')).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -16,6 +16,12 @@ const rest = entries.filter((e) => e.id !== featured?.id).slice(0, 6);
 // 足迹统计
 const placeCount = new Set(entries.map((e) => e.data.location)).size;
 const tagCount = new Set(entries.flatMap((e) => e.data.tags)).size;
+
+// 在一起多少天（构建时初值，页面加载后由脚本实时更新）
+const daysTogether = Math.max(
+	1,
+	Math.floor((Date.now() - new Date(TOGETHER_SINCE).getTime()) / 86400000) + 1,
+);
 ---
 
 <BaseLayout>
@@ -58,6 +64,21 @@ const tagCount = new Set(entries.flatMap((e) => e.data.tags)).size;
 					)
 				}
 			</dl>
+		</section>
+
+		<!-- 在一起 · 甜蜂计数 -->
+		<section class="together" data-reveal>
+			<div class="together-inner">
+				<span class="together-names">
+					WJ <span class="heart" aria-hidden="true">♥</span> GB
+				</span>
+				<p class="together-count-line">
+					在一起的第
+					<span class="together-count" data-since={TOGETHER_SINCE}>{daysTogether}</span>
+					天
+				</p>
+				<p class="together-quote">{LOVE_QUOTE}</p>
+			</div>
 		</section>
 
 		<!-- 最新一程 -->
@@ -133,6 +154,16 @@ const tagCount = new Set(entries.flatMap((e) => e.data.tags)).size;
 	</main>
 </BaseLayout>
 
+<script>
+	// 让「在一起第 N 天」每天打开都是实时的，而不是停在构建那天。
+	const el = document.querySelector('.together-count');
+	if (el instanceof HTMLElement && el.dataset.since) {
+		const since = new Date(el.dataset.since).getTime();
+		const days = Math.floor((Date.now() - since) / 86400000) + 1;
+		if (days > 0) el.textContent = String(days);
+	}
+</script>
+
 <style>
 	main {
 		width: var(--container-wide);
@@ -170,6 +201,62 @@ const tagCount = new Set(entries.flatMap((e) => e.data.tags)).size;
 		flex-wrap: wrap;
 		gap: 0.8rem;
 		margin-top: 2.2rem;
+	}
+
+	/* 在一起 · 甜蜂计数 */
+	.together {
+		margin: 3rem 0 1rem;
+	}
+	.together-inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.65rem;
+		text-align: center;
+		padding: clamp(2.2rem, 5vw, 3.2rem) 2rem;
+		border-radius: var(--radius-xl);
+		border: 1px solid var(--border);
+		background:
+			radial-gradient(120% 150% at 50% 0%, var(--love-soft), transparent 62%),
+			var(--bg-subtle);
+	}
+	.together-names {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-family: var(--font-serif);
+		font-size: clamp(1.6rem, 4vw, 2.4rem);
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		color: var(--text);
+	}
+	.together-heart {
+		color: var(--love);
+		animation: heartbeat 1.7s ease-in-out infinite;
+	}
+	.together-heart {
+		color: var(--love);
+		animation: heartbeat 1.7s ease-in-out infinite;
+	}
+	.together-count-line {
+		margin: 0;
+		font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+		color: var(--text-muted);
+	}
+	.together-count {
+		font-family: var(--font-serif);
+		font-weight: 600;
+		font-size: 1.5em;
+		color: var(--love);
+		margin: 0 0.15em;
+	}
+	.together-quote {
+		margin: 0.4rem 0 0;
+		max-width: 28ch;
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+		color: var(--text);
 	}
 
 	/* 足迹统计条 */

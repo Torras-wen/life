@@ -10,6 +10,7 @@ const today = new Date();
 			<a class="footer-name" href="/">
 				{SITE_TITLE}<span class="dot" aria-hidden="true">.</span>
 			</a>
+			<p class="footer-couple">WJ <span class="heart" aria-hidden="true">♥</span> GB</p>
 			<p>WJ 与 GB，把一起走过的路、见过的光，慢慢存成一本可以翻阅的册子。</p>
 		</div>
 
@@ -20,7 +21,7 @@ const today = new Date();
 
 	<div class="footer-bottom wrapper">
 		<span>&copy; {today.getFullYear()} {SITE_TITLE_EN} · {SITE_AUTHORS}</span>
-		<span class="made">两个人的途中记录</span>
+		<span class="made">两个人的途中记录 <span class="heart" aria-hidden="true">♥</span></span>
 	</div>
 </footer>
 
@@ -43,6 +44,18 @@ const today = new Date();
 		margin: 0.6rem 0 0;
 		max-width: 30ch;
 		color: var(--text-muted);
+	}
+	.footer-brand .footer-couple {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+		margin-top: 0.7rem;
+		max-width: none;
+		font-family: var(--font-serif);
+		font-size: 1.15rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		color: var(--text);
 	}
 	.footer-name {
 		font-family: var(--font-serif);

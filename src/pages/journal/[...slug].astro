@@ -42,6 +42,9 @@ const { data } = entry;
 			<h1 class="hero-title" data-reveal>{data.title}</h1>
 			<div class="entry-meta" data-reveal>
 				<FormattedDate date={data.date} />
+				{data.author && (
+					<span class="byline">· {data.author === '一起' ? '我们一起写下' : `${data.author} 记录`}</span>
+				)}
 				{data.mood && <span class="mood">· {data.mood}</span>}
 			</div>
 			{
@@ -131,6 +134,10 @@ const { data } = entry;
 	.mood {
 		font-family: var(--font-serif);
 		font-style: italic;
+	}
+	.byline {
+		color: var(--love);
+		font-weight: 500;
 	}
 	.entry-tags {
 		display: flex;

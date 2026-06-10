@@ -19,6 +19,7 @@ const { data, id } = Astro.props.entry;
 			<span class="card-loc">{data.location}</span>
 			<span class="card-dot" aria-hidden="true">·</span>
 			<FormattedDate date={data.date} />
+			{data.author && <span class="card-author">{data.author}</span>}
 		</div>
 		<h3 class="card-title">{data.title}</h3>
 		<p class="card-summary">{data.summary}</p>
@@ -70,6 +71,14 @@ const { data, id } = Astro.props.entry;
 		gap: 0.5rem;
 		font-size: 0.82rem;
 		color: var(--text-faint);
+	}
+	.card-author {
+		padding: 0.05rem 0.5rem;
+		border-radius: var(--radius-pill);
+		background: var(--love-soft);
+		color: var(--love);
+		font-size: 0.72rem;
+		font-weight: 600;
 	}
 	.card-loc {
 		color: var(--accent);

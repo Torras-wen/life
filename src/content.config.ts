@@ -23,6 +23,8 @@ export const collections = {
 			coverAlt: z.string().optional(),
 			/** 可选：天气 / 心情一行字。 */
 			mood: z.string().optional(),
+			/** 这篇主要是谁写的：WJ / GB / 一起。 */
+			author: z.enum(['WJ', 'GB', '一起']).optional(),
 			/** 是否在首页作为「最新一程」精选。 */
 			featured: z.boolean().default(false),
 		}),
