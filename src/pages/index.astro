@@ -30,9 +30,10 @@ const daysTogether = Math.max(
 		<!-- Hero -->
 		<section class="hero">
 			<span class="kicker" data-reveal>FARAWAY · WJ &amp; GB 的二人手记</span>
-			<h1 class="hero-title">
-				<span class="line">慢慢走，</span>
-				<span class="line">把远方收进同一本册子。</span>
+			<h1 class="hero-title" data-hero>
+				<span class="line"><span class="line-inner">慢慢走，</span></span>
+				<span class="line"><span class="line-inner">把远方收进</span></span>
+				<span class="line"><span class="line-inner"><em>同一本册子。</em></span></span>
 			</h1>
 			<p class="hero-sub" data-reveal>山海、街巷与人间烟火，两个人一起慢慢记下。</p>
 			<p class="hero-desc" data-reveal>{SITE_DESCRIPTION}</p>
@@ -194,14 +195,22 @@ const daysTogether = Math.max(
 		padding: 3.5rem 0 4rem;
 	}
 	.hero-title {
-		margin: 1.2rem 0 0;
-		font-size: clamp(2.8rem, 8vw, 5rem);
-		font-weight: 560;
-		line-height: 1.04;
-		letter-spacing: -0.025em;
+		margin: 1.4rem 0 0;
+		font-size: clamp(3.2rem, 11vw, 8rem);
+		font-weight: 580;
+		line-height: 0.98;
+		letter-spacing: -0.035em;
 	}
 	.hero-title .line {
 		display: block;
+		overflow: hidden;
+	}
+	.hero-title .line-inner {
+		display: block;
+	}
+	.hero-title em {
+		font-style: italic;
+		color: var(--accent);
 	}
 	.hero-sub {
 		margin: 1.4rem 0 0;

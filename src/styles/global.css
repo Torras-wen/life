@@ -403,12 +403,128 @@ code {
 .js [data-reveal] {
 	opacity: 0;
 }
+/* Hero 标题逐行：JS 接管前先隐藏内层，避免闪现（位移交给 GSAP，避免 translateY% 与 yPercent 冲突） */
+.js .hero-title[data-hero] .line-inner {
+	opacity: 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
 	.js [data-reveal] {
 		opacity: 1;
 	}
+	.js .hero-title[data-hero] .line-inner {
+		opacity: 1;
+		transform: none;
+	}
 	html {
 		scroll-behavior: auto;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* 封面揭幕遮罩 —— 悬停时一道光幕扫过 + 轻缩放                          */
+/* ------------------------------------------------------------------ */
+.card-media,
+.feature-media,
+.entry-thumb {
+	position: relative;
+}
+.card-media::after,
+.feature-media::after,
+.entry-thumb::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	pointer-events: none;
+	background: linear-gradient(
+		105deg,
+		transparent 30%,
+		rgba(255, 255, 255, 0.28) 48%,
+		transparent 66%
+	);
+	background-size: 280% 100%;
+	background-position: 130% 0;
+	opacity: 0;
+	transition:
+		opacity 0.4s ease,
+		background-position 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+:root[data-theme='dark'] .card-media::after,
+:root[data-theme='dark'] .feature-media::after,
+:root[data-theme='dark'] .entry-thumb::after {
+	background: linear-gradient(
+		105deg,
+		transparent 30%,
+		rgba(255, 255, 255, 0.14) 48%,
+		transparent 66%
+	);
+	background-size: 280% 100%;
+	background-position: 130% 0;
+}
+.card:hover .card-media::after,
+.feature-card:hover .feature-media::after,
+.entry-list a:hover .entry-thumb::after {
+	opacity: 1;
+	background-position: -40% 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* 滚动进度指示器 —— 右下角细环                                        */
+/* ------------------------------------------------------------------ */
+.scroll-progress {
+	position: fixed;
+	right: clamp(1rem, 3vw, 2rem);
+	bottom: clamp(1rem, 3vw, 2rem);
+	z-index: 60;
+	width: 46px;
+	height: 46px;
+	display: grid;
+	place-items: center;
+	opacity: 0;
+	transform: translateY(10px) scale(0.9);
+	transition:
+		opacity 0.4s ease,
+		transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	pointer-events: none;
+}
+.scroll-progress.visible {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+}
+.scroll-progress svg {
+	width: 100%;
+	height: 100%;
+	transform: rotate(-90deg);
+}
+.scroll-progress .track {
+	fill: none;
+	stroke: var(--border-strong);
+	stroke-width: 2;
+}
+.scroll-progress .bar {
+	fill: none;
+	stroke: var(--accent);
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-dasharray: var(--circ);
+	stroke-dashoffset: var(--circ);
+}
+.scroll-progress .pct {
+	position: absolute;
+	font-family: var(--font-mono);
+	font-size: 0.62rem;
+	color: var(--text-muted);
+}
+@media (max-width: 720px) {
+	.scroll-progress {
+		display: none;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.card-media::after,
+	.feature-media::after,
+	.entry-thumb::after {
+		display: none;
 	}
 }

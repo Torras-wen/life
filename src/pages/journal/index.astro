@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Cover from '../../components/Cover.astro';
+import Marquee from '../../components/Marquee.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 
 const entries = (await getCollection('journal')).sort(
@@ -29,6 +30,11 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
 				把每一段路存进时间里 —— 共 {entries.length} 段记录，可以慢慢往下翻。
 			</p>
 		</section>
+
+		<Marquee
+			items={['走过的路', '看过的光', '住过的小城', 'WJ ♥ GB', '所有的远方']}
+			speed={36}
+		/>
 
 		{
 			years.map((year) => (

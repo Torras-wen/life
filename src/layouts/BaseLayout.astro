@@ -20,5 +20,14 @@ const { title, description } = Astro.props;
 		<Header />
 		<slot />
 		<Footer />
+
+		<!-- 滚动进度指示器（右下角细环，由 Header 脚本驱动） -->
+		<div class="scroll-progress" id="scroll-progress" aria-hidden="true">
+			<svg viewBox="0 0 44 44">
+				<circle class="track" cx="22" cy="22" r="20"></circle>
+				<circle class="bar" cx="22" cy="22" r="20" style="--circ:125.6"></circle>
+			</svg>
+			<span class="pct" id="scroll-pct">0</span>
+		</div>
 	</body>
 </html>
