@@ -3,6 +3,8 @@ title: 在大理，把日子过慢
 location: 云南 · 大理
 date: 2025-04-12
 summary: 苍山脚下的十天，慢慢学会什么都不做 —— 只是晒太阳、发呆、等风来。
+cover: /assets/uploads/IMG_6407.jpeg
+coverAlt: ''
 tags:
   - 慢生活
   - 古城
