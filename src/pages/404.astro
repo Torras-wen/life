@@ -1,8 +1,36 @@
 ---
-import Hero from '../components/Hero.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Not Found" description="404 Error — this page was not found">
-	<Hero title="Page Not Found" tagline="Not found" />
+<BaseLayout title="走错路了" description="页面不存在。">
+	<main class="notfound">
+		<span class="kicker">404</span>
+		<h1>好像走错路了</h1>
+		<p>这条小巷的尽头没有页面 —— 不过迷路，有时候也是旅行的一部分。</p>
+		<a class="button button-primary" href="/">回到出发点</a>
+	</main>
 </BaseLayout>
+
+<style>
+	.notfound {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		min-height: 60vh;
+		gap: 1rem;
+	}
+	.notfound h1 {
+		margin: 0.5rem 0;
+		font-size: clamp(2.2rem, 6vw, 3.4rem);
+	}
+	.notfound p {
+		max-width: 36ch;
+		color: var(--text-muted);
+		font-size: 1.1rem;
+	}
+	.notfound .button {
+		margin-top: 1rem;
+	}
+</style>

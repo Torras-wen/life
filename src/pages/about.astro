@@ -1,119 +1,274 @@
 ---
-import ContactCTA from '../components/ContactCTA.astro';
-import Hero from '../components/Hero.astro';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const entries = await getCollection('journal');
+const places = [...new Set(entries.map((e) => e.data.location))];
+
+const records = [
+	{ t: '远途', d: '山川湖海，异国街巷，那些要坐很久车才能抵达的地方。' },
+	{ t: '附近', d: '城市的角落、周末的短途，原来熟悉的地方也有没见过的光。' },
+	{ t: '日常', d: '一顿饭、一场雨、一段下班的路 —— 生活本身也值得收藏。' },
+];
+
+const ways = [
+	{ n: '01', t: '慢一点', d: '宁可少看一个景点，也要在巷口多坐一会儿。' },
+	{ n: '02', t: '写下来', d: '当天的天气、味道和心情，趁还热乎时记下。' },
+	{ n: '03', t: '不赶路', d: '把通勤也当成风景，地铁与渡轮都算数。' },
+	{ n: '04', t: '带回家', d: '一张车票、一颗石子，都是这趟旅程的证据。' },
+];
 ---
 
-<BaseLayout title="About | Jeanine White" description="About Jeanine White Lorem Ipsum">
-	<div class="stack gap-20">
-		<main class="wrapper about">
-			<Hero
-				title="About"
-				tagline="Thanks for stopping by. Read below to learn more about myself and my background."
-			>
-				<img
-					width="1553"
-					height="873"
-					src="/assets/at-work.jpg"
-					alt="Jeanine White at work with a colleague"
-				/>
-			</Hero>
+<BaseLayout title="关于" description="关于这本记录生活与旅行的册子。">
+	<main class="about">
+		<section class="page-hero">
+			<span class="kicker" data-reveal>ABOUT</span>
+			<h1 class="hero-title">
+				<span class="line">关于这本册子</span>
+			</h1>
+			<p class="lede" data-reveal>
+				这里不写攻略，也不赶热点。只是把走过的路、见过的光，和那些舍不得忘记的瞬间，慢慢存下来。
+			</p>
+		</section>
 
-			<section>
-				<h2 class="section-title">Background</h2>
-				<div class="content">
-					<p>
-						Lorem ipsum dolor sit amet, <a href="https://astro.build/">Astro</a> makes people happy. Sed
-						do eiusmod tempor incididunt ut labore et dolore magna aliqua. Proin nibh nisl condimentum
-						id venenatis a condimentum vitae. Dapibus ultrices in iaculis nunc. Arcu odio ut sem nulla
-						pharetra diam sit amet. Diam quis enim lobortis scelerisque fermentum dui faucibus in ornare.
-					</p>
-					<p>
-						Arcu dui vivamus arcu felis bibendum ut tristique et egestas. Eget gravida cum sociis
-						natoque penatibus. Cras fermentum odio eu feugiat pretium nibh. Proin nibh nisl
-						condimentum id venenatis. Porta nibh venenatis cras sed felis eget velit. Id diam vel
-						quam elementum pulvinar etiam non.
-					</p>
-					<p>
-						Ultrices tincidunt arcu non sodales neque sodales ut. Sed enim ut sem viverra aliquet
-						eget sit amet. Lacus luctus accumsan tortor posuere ac ut consequat semper viverra.
-						Viverra accumsan in nisl nisi scelerisque eu ultrices. In massa tempor nec feugiat nisl
-						pretium fusce.
-					</p>
-				</div>
-			</section>
-			<section>
-				<h2 class="section-title">Education</h2>
-				<div class="content">
-					<p>Corporis voluptates tenetur laudantium.</p>
-				</div>
-			</section>
-			<section>
-				<h2 class="section-title">Skills</h2>
-				<div class="content">
-					<p>officia unde omnis</p>
-				</div>
-			</section>
-		</main>
+		<section class="intro" data-reveal>
+			<p>
+				我喜欢出发，也喜欢回来。喜欢在陌生的城市迷一次路，也喜欢在熟悉的街角发现新的咖啡馆。比起「去过」，我更在意「记得」——
+				记得那天的风，记得那碗汤的温度，记得自己当时在想什么。
+			</p>
+			<p>
+				于是有了这个地方。它像一本可以反复翻阅的相册，又像一封写给未来自己的信。如果你也路过这里，欢迎一起慢慢看。
+			</p>
+		</section>
 
-		<ContactCTA />
-	</div>
+		<section class="records">
+			<div class="rule" data-reveal><span class="kicker">记录什么</span></div>
+			<div class="record-grid">
+				{
+					records.map((r) => (
+						<div class="record-card" data-reveal>
+							<h3>{r.t}</h3>
+							<p>{r.d}</p>
+						</div>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="ways">
+			<div class="rule" data-reveal><span class="kicker">我的方式</span></div>
+			<ul class="way-list">
+				{
+					ways.map((w) => (
+						<li data-reveal>
+							<span class="way-num">{w.n}</span>
+							<span class="way-body">
+								<span class="way-title">{w.t}</span>
+								<span class="way-desc">{w.d}</span>
+							</span>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		{
+			places.length > 0 && (
+				<section class="places">
+					<div class="rule" data-reveal>
+						<span class="kicker">去过的地方</span>
+					</div>
+					<div class="place-cloud" data-reveal>
+						{places.map((p) => (
+							<span class="place">{p}</span>
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		<section class="contact" data-reveal>
+			<div class="contact-inner">
+				<h2>想一起走走，或随便聊聊？</h2>
+				<p>路上见，或者写封信给我。</p>
+				<div class="contact-actions">
+					<a class="button button-primary" href="mailto:hello@example.com">写封信</a>
+					<a class="button button-ghost" href="/journal/">翻翻旅程</a>
+				</div>
+			</div>
+		</section>
+	</main>
 </BaseLayout>
 
 <style>
-	.about {
+	main {
+		width: var(--container-wide);
+	}
+	.page-hero {
+		padding: 3rem 0 2rem;
+	}
+	.hero-title {
+		margin: 1rem 0 0;
+		font-size: clamp(2.6rem, 7vw, 4.2rem);
+		letter-spacing: -0.025em;
+	}
+	.hero-title .line {
+		display: block;
+	}
+	.lede {
+		margin: 1.4rem 0 0;
+		max-width: 42rem;
+		font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+		font-family: var(--font-serif);
+		color: var(--text-muted);
+		line-height: 1.5;
+	}
+
+	.intro {
+		max-width: var(--container);
+		margin: 2.5rem 0 0;
+		font-size: 1.1rem;
+		color: var(--text-muted);
+	}
+	.intro p {
+		margin-bottom: 1.2em;
+	}
+
+	.rule {
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--border);
+		margin-bottom: 2rem;
+	}
+
+	.records {
+		margin-top: 5rem;
+	}
+	.record-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5rem;
+	}
+	.record-card {
+		padding: 1.8rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		background: var(--surface);
+		transition:
+			border-color 0.25s ease,
+			transform 0.25s ease;
+	}
+	.record-card:hover {
+		border-color: var(--accent);
+		transform: translateY(-3px);
+	}
+	.record-card h3 {
+		margin: 0 0 0.5rem;
+		font-size: 1.4rem;
+		color: var(--accent);
+	}
+	.record-card p {
+		margin: 0;
+		color: var(--text-muted);
+		font-size: 0.98rem;
+	}
+
+	.ways {
+		margin-top: 5rem;
+	}
+	.way-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		max-width: var(--container);
+	}
+	.way-list li {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 1.5rem;
+		padding: 1.5rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+	.way-num {
+		font-family: var(--font-mono);
+		font-size: 0.95rem;
+		color: var(--text-faint);
+		padding-top: 0.3rem;
+	}
+	.way-body {
 		display: flex;
 		flex-direction: column;
-		gap: 3.5rem;
+		gap: 0.3rem;
+	}
+	.way-title {
+		font-family: var(--font-serif);
+		font-size: 1.5rem;
+		font-weight: 560;
+		color: var(--text);
+	}
+	.way-desc {
+		color: var(--text-muted);
 	}
 
-	img {
-		margin-top: 1.5rem;
-		border-radius: 1.5rem;
-		box-shadow: var(--shadow-md);
+	.places {
+		margin-top: 5rem;
+	}
+	.place-cloud {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.7rem;
+	}
+	.place {
+		padding: 0.55rem 1.1rem;
+		border-radius: var(--radius-pill);
+		background: var(--bg-subtle);
+		border: 1px solid var(--border);
+		font-family: var(--font-serif);
+		font-size: 1.05rem;
+		color: var(--text);
+		transition:
+			color 0.2s ease,
+			border-color 0.2s ease,
+			background-color 0.2s ease;
+	}
+	.place:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+		background: var(--accent-soft);
 	}
 
-	section {
+	.contact {
+		margin: 6rem 0 2rem;
+	}
+	.contact-inner {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
-		color: var(--gray-200);
+		align-items: center;
+		gap: 1rem;
+		padding: clamp(3rem, 8vw, 5rem) 2rem;
+		text-align: center;
+		background: var(--bg-subtle);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-xl);
+	}
+	.contact-inner h2 {
+		margin: 0;
+		font-size: clamp(1.6rem, 4vw, 2.4rem);
+	}
+	.contact-inner p {
+		margin: 0;
+		color: var(--text-muted);
+	}
+	.contact-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.8rem;
+		justify-content: center;
+		margin-top: 1rem;
 	}
 
-	.section-title {
-		grid-column-start: 1;
-		font-size: var(--text-xl);
-		color: var(--gray-0);
-	}
-
-	.content {
-		grid-column: 2 / 4;
-	}
-
-	.content :global(a) {
-		text-decoration: 1px solid underline transparent;
-		text-underline-offset: 0.25em;
-		transition: text-decoration-color var(--theme-transition);
-	}
-
-	.content :global(a:hover),
-	.content :global(a:focus) {
-		text-decoration-color: currentColor;
-	}
-
-	@media (min-width: 50em) {
-		.about {
-			display: grid;
-			grid-template-columns: 1fr 60% 1fr;
-		}
-
-		.about > :global(:first-child) {
-			grid-column-start: 2;
-		}
-
-		section {
-			display: contents;
-			font-size: var(--text-lg);
+	@media (max-width: 760px) {
+		.record-grid {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>

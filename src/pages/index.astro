@@ -1,249 +1,382 @@
 ---
 import { getCollection } from 'astro:content';
-// Component Imports
-import CallToAction from '../components/CallToAction.astro';
-// Page section components
-import ContactCTA from '../components/ContactCTA.astro';
-import Grid from '../components/Grid.astro';
-import Hero from '../components/Hero.astro';
-import Icon from '../components/Icon.astro';
-import Pill from '../components/Pill.astro';
-import PortfolioPreview from '../components/PortfolioPreview.astro';
-import Skills from '../components/Skills.astro';
-// Layout import — provides basic page elements: <head>, <nav>, <footer> etc.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Cover from '../components/Cover.astro';
+import JournalCard from '../components/JournalCard.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_DESCRIPTION } from '../consts';
 
-// Content Fetching: List four most recent work projects
-const projects = (await getCollection('work'))
-	.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
-	.slice(0, 4);
+const entries = (await getCollection('journal')).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
 
-// Full Astro Component Syntax:
-// https://docs.astro.build/basics/astro-components/
+const featured = entries.find((e) => e.data.featured) ?? entries[0];
+const rest = entries.filter((e) => e.id !== featured?.id).slice(0, 6);
+
+// 足迹统计
+const placeCount = new Set(entries.map((e) => e.data.location)).size;
+const tagCount = new Set(entries.flatMap((e) => e.data.tags)).size;
 ---
 
 <BaseLayout>
-	<div class="stack gap-20 lg:gap-48">
-		<div class="wrapper stack gap-8 lg:gap-20">
-			<header class="hero">
-				<Hero
-					title="Hello, my name is Jeanine White"
-					tagline="I am a Creative Developer who is currently based in Portland, Oregon."
-					align="start"
-				>
-					<div class="roles">
-						<Pill><Icon icon="code" size="1.33em" /> Developer</Pill>
-						<Pill><Icon icon="microphone-stage" size="1.33em" /> Speaker</Pill>
-						<Pill><Icon icon="pencil-line" size="1.33em" /> Writer</Pill>
+	<main>
+		<!-- Hero -->
+		<section class="hero">
+			<span class="kicker" data-reveal>FARAWAY · 旅居手记</span>
+			<h1 class="hero-title">
+				<span class="line">慢慢走，</span>
+				<span class="line">把远方收进册子。</span>
+			</h1>
+			<p class="hero-sub" data-reveal>山海、街巷与人间烟火，都值得被慢慢记下。</p>
+			<p class="hero-desc" data-reveal>{SITE_DESCRIPTION}</p>
+			<div class="hero-actions" data-reveal>
+				<a class="button button-primary" href="/journal/">翻阅旅程</a>
+				<a class="button button-ghost" href="/about/">关于这里</a>
+			</div>
+
+			<dl class="stat-strip" data-reveal>
+				<div class="stat">
+					<dt>记录</dt>
+					<dd>{entries.length}<span>段</span></dd>
+				</div>
+				<div class="stat">
+					<dt>去过</dt>
+					<dd>{placeCount}<span>处</span></dd>
+				</div>
+				<div class="stat">
+					<dt>主题</dt>
+					<dd>{tagCount}<span>类</span></dd>
+				</div>
+				{
+					featured && (
+						<div class="stat">
+							<dt>最近</dt>
+							<dd class="stat-date">
+								<FormattedDate date={featured.data.date} compact />
+							</dd>
+						</div>
+					)
+				}
+			</dl>
+		</section>
+
+		<!-- 最新一程 -->
+		{
+			featured && (
+				<section class="featured">
+					<div class="rule" data-reveal>
+						<span class="kicker">最新一程</span>
 					</div>
-				</Hero>
+					<a class="feature-card" href={`/journal/${featured.id}/`} data-reveal>
+						<div class="feature-media">
+							<Cover
+								seed={featured.data.title}
+								image={featured.data.cover}
+								imageAlt={featured.data.coverAlt}
+								label={featured.data.location}
+							/>
+						</div>
+						<div class="feature-body">
+							<div class="feature-meta">
+								<span class="feature-loc">{featured.data.location}</span>
+								<span aria-hidden="true">·</span>
+								<FormattedDate date={featured.data.date} />
+							</div>
+							<h2>{featured.data.title}</h2>
+							<p>{featured.data.summary}</p>
+							{featured.data.mood && <p class="feature-mood">{featured.data.mood}</p>}
+							<span class="read-more">
+								读这一程 <span aria-hidden="true">→</span>
+							</span>
+						</div>
+					</a>
+				</section>
+			)
+		}
 
-				<img
-					alt="Jeanine White smiling in a red plaid shirt and tortoise shell glasses"
-					width="480"
-					height="620"
-					src="/assets/portrait.jpg"
-				/>
-			</header>
+		<!-- 近期旅程画廊 -->
+		{
+			rest.length > 0 && (
+				<section class="gallery-section">
+					<div class="rule section-head" data-reveal>
+						<span class="kicker">近期旅程</span>
+						<a class="more-link" href="/journal/">
+							全部 <span aria-hidden="true">→</span>
+						</a>
+					</div>
+					<div class="gallery">
+						{rest.map((entry) => (
+							<JournalCard entry={entry} />
+						))}
+					</div>
+				</section>
+			)
+		}
 
-			<Skills />
-		</div>
+		<!-- 手记引言 -->
+		<section class="manifesto">
+			<p class="manifesto-text" data-reveal>
+				<span>为什么要记录？</span>
+				风会停，光会移，记忆也会褪色。但只要写下来，那个清晨的薄雾、那碗热汤、那段下坡的路，<em
+					>就都还在。</em
+				>
+			</p>
+		</section>
 
-		<main class="wrapper stack gap-20 lg:gap-48">
-			<section class="section with-background with-cta">
-				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Selected Work</h3>
-					<p>Take a look below at some of my featured work for clients from the past few years.</p>
-				</header>
-
-				<div class="gallery">
-					<Grid variant="offset">
-						{
-							projects.map((project) => (
-								<li>
-									<PortfolioPreview project={project} />
-								</li>
-							))
-						}
-					</Grid>
-				</div>
-
-				<div class="cta">
-					<CallToAction href="/work/">
-						View All
-						<Icon icon="arrow-right" size="1.2em" />
-					</CallToAction>
-				</div>
-			</section>
-
-			<section class="section with-background bg-variant">
-				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Mentions</h3>
-					<p>
-						I have been fortunate enough to receive praise for my work in several publications. Take
-						a look below to learn more.
-					</p>
-				</header>
-
-				<div class="gallery">
-					<Grid variant="small">
-						{
-							['Medium', 'BuzzFeed', 'The Next Web', 'awwwards.', 'TechCrunch'].map((brand) => (
-								<li class="mention-card">
-									<p>{brand}</p>
-								</li>
-							))
-						}
-					</Grid>
-				</div>
-			</section>
-		</main>
-
-		<ContactCTA />
-	</div>
+		<!-- CTA -->
+		<section class="cta" data-reveal>
+			<div class="cta-inner">
+				<h2>还有很多路，一起慢慢看完。</h2>
+				<a class="button button-primary" href="/journal/">翻阅全部旅程</a>
+			</div>
+		</section>
+	</main>
 </BaseLayout>
 
 <style>
+	main {
+		width: var(--container-wide);
+	}
+
+	/* Hero */
 	.hero {
+		padding: 3.5rem 0 4rem;
+	}
+	.hero-title {
+		margin: 1.2rem 0 0;
+		font-size: clamp(2.8rem, 8vw, 5rem);
+		font-weight: 560;
+		line-height: 1.04;
+		letter-spacing: -0.025em;
+	}
+	.hero-title .line {
+		display: block;
+	}
+	.hero-sub {
+		margin: 1.4rem 0 0;
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: clamp(1.25rem, 3vw, 1.7rem);
+		color: var(--text-muted);
+	}
+	.hero-desc {
+		margin: 1.2rem 0 0;
+		max-width: 38rem;
+		font-size: 1.08rem;
+		color: var(--text-muted);
+	}
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.8rem;
+		margin-top: 2.2rem;
+	}
+
+	/* 足迹统计条 */
+	.stat-strip {
+		display: flex;
+		flex-wrap: wrap;
+		gap: clamp(1.5rem, 5vw, 3.5rem);
+		margin: 3rem 0 0;
+		padding: 1.6rem 0 0;
+		border-top: 1px solid var(--border);
+	}
+	.stat dt {
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--text-faint);
+	}
+	.stat dd {
+		margin: 0.3rem 0 0;
+		font-family: var(--font-serif);
+		font-size: 2.2rem;
+		font-weight: 560;
+		line-height: 1;
+		color: var(--text);
+	}
+	.stat dd span {
+		margin-left: 0.2rem;
+		font-size: 0.95rem;
+		color: var(--text-faint);
+	}
+	.stat-date {
+		font-size: 1.5rem !important;
+	}
+
+	/* 区块标题尺 */
+	.rule {
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--border);
+	}
+	.section-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	.more-link {
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--text-muted);
+	}
+	.more-link:hover {
+		color: var(--accent);
+	}
+	.more-link span {
+		display: inline-block;
+		transition: transform 0.25s ease;
+	}
+	.more-link:hover span {
+		transform: translateX(3px);
+	}
+
+	/* 最新一程 */
+	.featured {
+		margin-top: 5rem;
+	}
+	.feature-card {
+		display: grid;
+		grid-template-columns: 1.05fr 1fr;
+		gap: clamp(1.5rem, 4vw, 3.5rem);
+		align-items: center;
+		margin-top: 1.8rem;
+		color: inherit;
+	}
+	.feature-media {
+		overflow: hidden;
+		border-radius: var(--radius-xl);
+		aspect-ratio: 4 / 3;
+		background: var(--bg-subtle);
+		box-shadow: var(--shadow-sm);
+		transition: box-shadow 0.4s ease;
+	}
+	.feature-card:hover .feature-media {
+		box-shadow: var(--shadow);
+	}
+	.feature-media :global(.cover) {
+		height: 120%;
+		will-change: transform;
+	}
+	.feature-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.85rem;
+		color: var(--text-faint);
+		margin-bottom: 0.8rem;
+	}
+	.feature-loc {
+		color: var(--accent);
+		font-weight: 600;
+	}
+	.feature-body h2 {
+		margin: 0 0 0.7rem;
+		font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+		line-height: 1.12;
+		transition: color 0.2s ease;
+	}
+	.feature-card:hover .feature-body h2 {
+		color: var(--accent);
+	}
+	.feature-body p {
+		margin: 0;
+		color: var(--text-muted);
+		font-size: 1.04rem;
+	}
+	.feature-mood {
+		margin-top: 0.6rem !important;
+		font-family: var(--font-serif);
+		font-style: italic;
+		color: var(--text-faint) !important;
+	}
+	.read-more {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		margin-top: 1.4rem;
+		font-weight: 600;
+		font-size: 0.95rem;
+		color: var(--accent);
+	}
+	.read-more span {
+		transition: transform 0.25s ease;
+	}
+	.feature-card:hover .read-more span {
+		transform: translateX(4px);
+	}
+
+	/* 画廊 */
+	.gallery-section {
+		margin-top: 5.5rem;
+	}
+	.gallery {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: clamp(1.5rem, 3vw, 2.5rem);
+		margin-top: 2rem;
+	}
+
+	/* 手记引言 */
+	.manifesto {
+		margin: 7rem 0;
+		padding: 0 clamp(0, 6vw, 4rem);
+	}
+	.manifesto-text {
+		margin: 0;
+		max-width: 30ch;
+		font-family: var(--font-serif);
+		font-size: clamp(1.7rem, 4.5vw, 3rem);
+		font-weight: 500;
+		line-height: 1.3;
+		letter-spacing: -0.015em;
+		color: var(--text);
+	}
+	.manifesto-text span {
+		display: block;
+		margin-bottom: 0.4em;
+		color: var(--accent);
+	}
+	.manifesto-text em {
+		color: var(--sun);
+		font-style: italic;
+	}
+
+	/* CTA */
+	.cta {
+		margin: 6rem 0 2rem;
+	}
+	.cta-inner {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 2rem;
-	}
-
-	.roles {
-		display: none;
-	}
-
-	.hero img {
-		aspect-ratio: 5 / 4;
-		object-fit: cover;
-		object-position: top;
-		border-radius: 1.5rem;
-		box-shadow: var(--shadow-md);
-	}
-
-	@media (min-width: 50em) {
-		.hero {
-			display: grid;
-			grid-template-columns: 6fr 4fr;
-			padding-inline: 2.5rem;
-			gap: 3.75rem;
-		}
-
-		.roles {
-			margin-top: 0.5rem;
-			display: flex;
-			gap: 0.5rem;
-		}
-
-		.hero img {
-			aspect-ratio: 3 / 4;
-			border-radius: 4.5rem;
-			object-fit: cover;
-		}
-	}
-
-	/* ====================================================== */
-
-	.section {
-		display: grid;
-		gap: 2rem;
-	}
-
-	.with-background {
-		position: relative;
-	}
-
-	.with-background::before {
-		--hero-bg: var(--bg-image-subtle-2);
-
-		content: '';
-		position: absolute;
-		pointer-events: none;
-		left: 50%;
-		width: 100vw;
-		aspect-ratio: calc(2.25 / var(--bg-scale));
-		top: 0;
-		transform: translateY(-75%) translateX(-50%);
-		background:
-			url('/assets/backgrounds/noise.png') top center/220px repeat,
-			var(--hero-bg) center center / var(--bg-gradient-size) no-repeat,
-			var(--gray-999);
-		background-blend-mode: overlay, normal, normal, normal;
-		mix-blend-mode: var(--bg-blend-mode);
-		z-index: -1;
-	}
-
-	.with-background.bg-variant::before {
-		--hero-bg: var(--bg-image-subtle-1);
-	}
-
-	.section-header {
-		justify-self: center;
+		gap: 1.6rem;
+		padding: clamp(3rem, 8vw, 5rem) 2rem;
 		text-align: center;
-		max-width: 50ch;
-		font-size: var(--text-md);
-		color: var(--gray-300);
+		background: var(--bg-subtle);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-xl);
+	}
+	.cta-inner h2 {
+		margin: 0;
+		font-size: clamp(1.6rem, 4vw, 2.6rem);
+		max-width: 20ch;
 	}
 
-	.section-header h3 {
-		font-size: var(--text-2xl);
-	}
-
-	@media (min-width: 50em) {
-		.section {
-			grid-template-columns: repeat(4, 1fr);
-			grid-template-areas: 'header header header header' 'gallery gallery gallery gallery';
-			gap: 5rem;
-		}
-
-		.section.with-cta {
-			grid-template-areas: 'header header header cta' 'gallery gallery gallery gallery';
-		}
-
-		.section-header {
-			grid-area: header;
-			font-size: var(--text-lg);
-		}
-
-		.section-header h3 {
-			font-size: var(--text-4xl);
-		}
-
-		.with-cta .section-header {
-			justify-self: flex-start;
-			text-align: left;
-		}
-
+	@media (max-width: 900px) {
 		.gallery {
-			grid-area: gallery;
-		}
-
-		.cta {
-			grid-area: cta;
+			grid-template-columns: repeat(2, 1fr);
 		}
 	}
-
-	/* ====================================================== */
-
-	.mention-card {
-		display: flex;
-		height: 7rem;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		border: 1px solid var(--gray-800);
-		border-radius: 1.5rem;
-		color: var(--gray-300);
-		background: var(--gradient-subtle);
-		box-shadow: var(--shadow-sm);
+	@media (max-width: 720px) {
+		.feature-card {
+			grid-template-columns: 1fr;
+		}
 	}
-
-	@media (min-width: 50em) {
-		.mention-card {
-			border-radius: 1.5rem;
-			height: 9.5rem;
+	@media (max-width: 560px) {
+		.gallery {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>

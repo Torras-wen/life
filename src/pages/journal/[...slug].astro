@@ -1,0 +1,228 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Cover from '../../components/Cover.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+interface Props {
+	entry: CollectionEntry<'journal'>;
+}
+
+export async function getStaticPaths() {
+	const entries = (await getCollection('journal')).sort(
+		(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+	);
+	return entries.map((entry, i) => ({
+		params: { slug: entry.id },
+		props: {
+			entry,
+			newer: entries[i - 1] ?? null,
+			older: entries[i + 1] ?? null,
+		},
+	}));
+}
+
+const { entry } = Astro.props;
+const { newer, older } = Astro.props as Props & {
+	newer: CollectionEntry<'journal'> | null;
+	older: CollectionEntry<'journal'> | null;
+};
+const { Content } = await render(entry);
+const { data } = entry;
+---
+
+<BaseLayout title={data.title} description={data.summary}>
+	<main>
+		<a class="back-link" href="/journal/" data-reveal>
+			<span aria-hidden="true">←</span> 旅程
+		</a>
+
+		<header class="entry-header">
+			<span class="kicker" data-reveal>{data.location}</span>
+			<h1 class="hero-title" data-reveal>{data.title}</h1>
+			<div class="entry-meta" data-reveal>
+				<FormattedDate date={data.date} />
+				{data.mood && <span class="mood">· {data.mood}</span>}
+			</div>
+			{
+				data.tags.length > 0 && (
+					<div class="entry-tags" data-reveal>
+						{data.tags.map((t) => (
+							<span class="tag">{t}</span>
+						))}
+					</div>
+				)
+			}
+		</header>
+
+		<div class="hero-media" data-reveal>
+			<Cover
+				seed={data.title}
+				image={data.cover}
+				imageAlt={data.coverAlt}
+				label={data.location}
+			/>
+		</div>
+
+		<article class="prose">
+			<Content />
+		</article>
+
+		<nav class="entry-nav" aria-label="相邻旅程">
+			{
+				older ? (
+					<a class="nav-card prev" href={`/journal/${older.id}/`}>
+						<span class="nav-dir">← 上一程</span>
+						<span class="nav-title">{older.data.title}</span>
+						<span class="nav-loc">{older.data.location}</span>
+					</a>
+				) : (
+					<span />
+				)
+			}
+			{
+				newer ? (
+					<a class="nav-card next" href={`/journal/${newer.id}/`}>
+						<span class="nav-dir">下一程 →</span>
+						<span class="nav-title">{newer.data.title}</span>
+						<span class="nav-loc">{newer.data.location}</span>
+					</a>
+				) : (
+					<span />
+				)
+			}
+		</nav>
+	</main>
+</BaseLayout>
+
+<style>
+	main {
+		width: var(--container-wide);
+		padding-top: 2.5rem;
+	}
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--text-muted);
+	}
+	.back-link:hover {
+		color: var(--accent);
+	}
+
+	.entry-header {
+		max-width: var(--container);
+		margin: 2rem auto 0;
+		text-align: center;
+	}
+	.hero-title {
+		margin: 1rem 0 0;
+		font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+	}
+	.entry-meta {
+		margin-top: 1rem;
+		font-size: 0.92rem;
+		color: var(--text-faint);
+	}
+	.mood {
+		font-family: var(--font-serif);
+		font-style: italic;
+	}
+	.entry-tags {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.45rem;
+		margin-top: 1.2rem;
+	}
+
+	.hero-media {
+		margin: 3rem 0;
+		overflow: hidden;
+		border-radius: var(--radius-xl);
+		aspect-ratio: 16 / 9;
+		background: var(--bg-subtle);
+		box-shadow: var(--shadow);
+	}
+	.hero-media :global(.cover) {
+		height: 124%;
+		will-change: transform;
+	}
+
+	.prose {
+		max-width: var(--container);
+		margin-inline: auto;
+		font-size: 1.12rem;
+	}
+	.prose :global(h2),
+	.prose :global(h3) {
+		max-width: 100%;
+	}
+	.prose :global(img) {
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-sm);
+		margin: 2rem 0;
+	}
+
+	/* 邻程导航 */
+	.entry-nav {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.5rem;
+		max-width: var(--container);
+		margin: 5rem auto 0;
+		padding-top: 2.5rem;
+		border-top: 1px solid var(--border);
+	}
+	.nav-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		padding: 1.4rem 1.5rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		background: var(--surface);
+		color: inherit;
+		transition:
+			border-color 0.25s ease,
+			background-color 0.25s ease,
+			transform 0.25s ease;
+	}
+	.nav-card:hover {
+		border-color: var(--accent);
+		background: var(--surface-hover);
+		transform: translateY(-2px);
+	}
+	.nav-card.next {
+		text-align: right;
+	}
+	.nav-dir {
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: var(--accent);
+	}
+	.nav-title {
+		margin-top: 0.3rem;
+		font-family: var(--font-serif);
+		font-size: 1.15rem;
+		font-weight: 560;
+		color: var(--text);
+	}
+	.nav-loc {
+		font-size: 0.8rem;
+		color: var(--text-faint);
+	}
+
+	@media (max-width: 600px) {
+		.entry-nav {
+			grid-template-columns: 1fr;
+		}
+		.nav-card.next {
+			text-align: left;
+		}
+	}
+</style>

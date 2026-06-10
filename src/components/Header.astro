@@ -1,0 +1,430 @@
+---
+import { SITE_TITLE, NAV_LINKS } from '../consts';
+
+const pathname = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
+const isCurrent = (href: string) => {
+	if (href === '/') return pathname === '/';
+	return pathname.startsWith(href);
+};
+---
+
+<header id="site-header">
+	<nav class="nav wrapper">
+		<a class="brand" href="/" aria-label={`${SITE_TITLE} 首页`}>
+			<span class="brand-mark" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="22" height="22">
+					<circle cx="17" cy="7.5" r="2.6" fill="var(--sun)"></circle>
+					<path
+						d="M2 20 L8.5 10.5 L12.5 15.5 L16 10 L22 20 Z"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.7"
+						stroke-linejoin="round"
+						stroke-linecap="round"></path>
+				</svg>
+			</span>
+			<span class="brand-name">{SITE_TITLE}<span class="dot" aria-hidden="true">.</span></span>
+		</a>
+
+		<div class="nav-links" id="nav-links">
+			{
+				NAV_LINKS.map(({ label, href }) => (
+					<a href={href} class:list={['nav-link', { active: isCurrent(href) }]}>
+						{label}
+					</a>
+				))
+			}
+		</div>
+
+		<div class="nav-actions">
+			<button
+				id="theme-toggle"
+				class="icon-button theme-toggle"
+				type="button"
+				aria-label="切换深色 / 浅色模式"
+			>
+				<svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="19" height="19">
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+				</svg>
+				<svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="19" height="19">
+					<circle cx="12" cy="12" r="4"></circle>
+					<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+				</svg>
+			</button>
+
+			<button id="menu-toggle" class="icon-button menu-button" type="button" aria-label="打开菜单" aria-expanded="false">
+				<span class="menu-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+			</button>
+		</div>
+	</nav>
+
+	<div class="mobile-menu" id="mobile-menu">
+		<nav class="mobile-links">
+			{
+				NAV_LINKS.map(({ label, href }) => (
+					<a href={href} class:list={['mobile-link', { active: isCurrent(href) }]}>
+						{label}
+					</a>
+				))
+			}
+		</nav>
+	</div>
+</header>
+
+<style>
+	#site-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background: color-mix(in srgb, var(--bg) 78%, transparent);
+		backdrop-filter: saturate(180%) blur(14px);
+		-webkit-backdrop-filter: saturate(180%) blur(14px);
+		border-bottom: 1px solid transparent;
+		transition:
+			border-color 0.3s ease,
+			background-color 0.3s ease;
+	}
+	#site-header.scrolled {
+		border-bottom-color: var(--border);
+	}
+	.nav {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		height: var(--header-height);
+	}
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+		color: var(--text);
+		font-family: var(--font-serif);
+	}
+	.brand:hover {
+		color: var(--text);
+	}
+	.brand-mark {
+		display: inline-flex;
+		color: var(--accent);
+	}
+	.brand-name {
+		font-weight: 600;
+		font-size: 1.35rem;
+		letter-spacing: -0.01em;
+	}
+	.brand-name .dot {
+		color: var(--accent);
+	}
+	.nav-links {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		margin-inline: auto;
+	}
+	.nav-link {
+		position: relative;
+		padding: 0.4rem 0.75rem;
+		color: var(--text-muted);
+		font-size: 0.96rem;
+		font-weight: 500;
+		border-radius: var(--radius-pill);
+		transition:
+			color 0.2s ease,
+			background-color 0.2s ease;
+	}
+	.nav-link::after {
+		content: '';
+		position: absolute;
+		left: 50%;
+		bottom: 0.05rem;
+		width: 0;
+		height: 2px;
+		border-radius: 2px;
+		background: var(--accent);
+		transform: translateX(-50%);
+		transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+	.nav-link:hover {
+		color: var(--text);
+	}
+	.nav-link:hover::after {
+		width: 1.1rem;
+	}
+	.nav-link.active {
+		color: var(--text);
+	}
+	.nav-link.active::after {
+		width: 1.1rem;
+	}
+	.nav-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	/* 主题切换图标显隐 */
+	.theme-toggle .icon {
+		display: none;
+	}
+	.theme-toggle .moon {
+		display: block;
+	}
+	:root[data-theme='dark'] .theme-toggle .moon {
+		display: none;
+	}
+	:root[data-theme='dark'] .theme-toggle .sun {
+		display: block;
+	}
+
+	/* 汉堡按钮 */
+	.menu-button {
+		display: none;
+	}
+	.menu-bars {
+		display: inline-flex;
+		flex-direction: column;
+		gap: 4px;
+		width: 18px;
+	}
+	.menu-bars i {
+		height: 2px;
+		width: 100%;
+		background: currentColor;
+		border-radius: 2px;
+		transition:
+			transform 0.3s ease,
+			opacity 0.2s ease;
+	}
+	#site-header.menu-open .menu-bars i:nth-child(1) {
+		transform: translateY(6px) rotate(45deg);
+	}
+	#site-header.menu-open .menu-bars i:nth-child(2) {
+		opacity: 0;
+	}
+	#site-header.menu-open .menu-bars i:nth-child(3) {
+		transform: translateY(-6px) rotate(-45deg);
+	}
+
+	/* 移动菜单面板 */
+	.mobile-menu {
+		display: none;
+		overflow: hidden;
+		max-height: 0;
+		border-top: 1px solid transparent;
+		transition:
+			max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+			border-color 0.3s ease;
+	}
+	#site-header.menu-open .mobile-menu {
+		max-height: 60vh;
+		border-top-color: var(--border);
+	}
+	.mobile-links {
+		display: flex;
+		flex-direction: column;
+		padding: 0.5rem var(--gutter) 1.5rem;
+		max-width: var(--container-wide);
+		margin-inline: auto;
+	}
+	.mobile-link {
+		padding: 0.9rem 0.25rem;
+		font-family: var(--font-serif);
+		font-size: 1.4rem;
+		color: var(--text);
+		border-bottom: 1px solid var(--border);
+	}
+	.mobile-link.active {
+		color: var(--accent);
+	}
+
+	@media (max-width: 720px) {
+		.nav-links {
+			display: none;
+		}
+		.menu-button {
+			display: inline-flex;
+		}
+		.mobile-menu {
+			display: block;
+		}
+	}
+</style>
+
+<script>
+	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import Lenis from 'lenis';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	// --- 主题切换 ---
+	const toggle = document.getElementById('theme-toggle');
+	toggle?.addEventListener('click', () => {
+		const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+		document.documentElement.dataset.theme = next;
+		localStorage.setItem('theme', next);
+	});
+
+	// --- 移动端菜单 ---
+	const header = document.getElementById('site-header');
+	const menuToggle = document.getElementById('menu-toggle');
+	menuToggle?.addEventListener('click', () => {
+		const open = header?.classList.toggle('menu-open');
+		menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+		menuToggle.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+	});
+	document.querySelectorAll('.mobile-link').forEach((a) => {
+		a.addEventListener('click', () => header?.classList.remove('menu-open'));
+	});
+
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	// --- 顶栏滚动态 ---
+	const onScroll = (y: number) => header?.classList.toggle('scrolled', y > 8);
+
+	// --- Lenis 惯性平滑滚动 ---
+	let lenis: Lenis | null = null;
+	if (!reduceMotion) {
+		lenis = new Lenis({
+			duration: 1.15,
+			easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+			smoothWheel: true,
+			wheelMultiplier: 1,
+			touchMultiplier: 1.6,
+		});
+		lenis.on('scroll', (e: { scroll: number }) => {
+			ScrollTrigger.update();
+			onScroll(e.scroll);
+		});
+		gsap.ticker.add((time) => lenis!.raf(time * 1000));
+		gsap.ticker.lagSmoothing(0);
+	} else {
+		window.addEventListener('scroll', () => onScroll(window.scrollY), { passive: true });
+	}
+
+	const initMotion = () => {
+		if (reduceMotion) {
+			gsap.set('[data-reveal]', { opacity: 1, y: 0, filter: 'none' });
+			gsap.set('.hero-title .line', { opacity: 1, y: 0, filter: 'none' });
+			return;
+		}
+
+		// Hero 标题：逐行升起 + 柔和模糊
+		const heroLines = document.querySelectorAll('.hero-title .line');
+		if (heroLines.length) {
+			gsap.fromTo(
+				heroLines,
+				{ y: 48, opacity: 0, filter: 'blur(12px)' },
+				{
+					y: 0,
+					opacity: 1,
+					filter: 'blur(0px)',
+					duration: 1.3,
+					ease: 'expo.out',
+					stagger: 0.14,
+					delay: 0.1,
+				},
+			);
+		}
+
+		// 通用揭示：升起 + 柔和模糊
+		gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
+			gsap.fromTo(
+				el,
+				{ y: 44, opacity: 0, filter: 'blur(10px)' },
+				{
+					y: 0,
+					opacity: 1,
+					filter: 'blur(0px)',
+					duration: 1.2,
+					ease: 'expo.out',
+					scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+				},
+			);
+		});
+
+		// Hero 随滚动视差淡出
+		const hero = document.querySelector('.hero');
+		if (hero) {
+			gsap.to(hero, {
+				yPercent: -14,
+				opacity: 0,
+				ease: 'none',
+				scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
+			});
+		}
+
+		// 封面视差 + 缓慢缩放
+		gsap.utils
+			.toArray<HTMLElement>('.feature-media .cover, .hero-media .cover, .card-media .cover')
+			.forEach((cover) => {
+				const wrap = cover.closest('.feature-media, .hero-media, .card-media');
+				gsap.fromTo(
+					cover,
+					{ yPercent: -8, scale: 1.08 },
+					{
+						yPercent: 8,
+						scale: 1.08,
+						ease: 'none',
+						scrollTrigger: { trigger: wrap, start: 'top bottom', end: 'bottom top', scrub: 1 },
+					},
+				);
+			});
+
+		// 磁性按钮
+		document.querySelectorAll<HTMLElement>('.button').forEach((btn) => {
+			btn.addEventListener('mousemove', (e) => {
+				const r = btn.getBoundingClientRect();
+				gsap.to(btn, {
+					x: (e.clientX - r.left - r.width / 2) * 0.25,
+					y: (e.clientY - r.top - r.height / 2) * 0.4,
+					duration: 0.6,
+					ease: 'power3.out',
+				});
+			});
+			btn.addEventListener('mouseleave', () => {
+				gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.4)' });
+			});
+		});
+
+		// 站内锚点平滑滚动
+		if (lenis) {
+			document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
+				a.addEventListener('click', (e) => {
+					const id = a.getAttribute('href');
+					if (id && id.length > 1) {
+						const target = document.querySelector(id);
+						if (target) {
+							e.preventDefault();
+							lenis!.scrollTo(target as HTMLElement, { offset: -80 });
+						}
+					}
+				});
+			});
+		}
+
+		ScrollTrigger.refresh();
+	};
+
+	initMotion();
+</script>
+
+<style is:global>
+	/* Lenis 平滑滚动必需样式 */
+	html.lenis,
+	html.lenis body {
+		height: auto;
+	}
+	.lenis.lenis-smooth {
+		scroll-behavior: auto !important;
+	}
+	.lenis.lenis-smooth [data-lenis-prevent] {
+		overscroll-behavior: contain;
+	}
+	.lenis.lenis-stopped {
+		overflow: hidden;
+	}
+	.lenis.lenis-smooth iframe {
+		pointer-events: none;
+	}
+</style>

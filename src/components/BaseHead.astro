@@ -1,0 +1,53 @@
+---
+// 在所有页面通过 <BaseHead /> 引入全局样式与字体。
+import '../styles/global.css';
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+const fullTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<!-- 在绘制前应用主题，避免闪烁 -->
+<script is:inline>
+	(() => {
+		const stored = localStorage.getItem('theme');
+		const theme =
+			stored === 'light' || stored === 'dark'
+				? stored
+				: window.matchMedia('(prefers-color-scheme: dark)').matches
+					? 'dark'
+					: 'light';
+		document.documentElement.dataset.theme = theme;
+		document.documentElement.classList.add('js');
+	})();
+</script>
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f5ef" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1413" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+<meta name="generator" content={Astro.generator} />
+<link rel="canonical" href={canonicalURL} />
+
+<title>{fullTitle}</title>
+<meta name="title" content={fullTitle} />
+<meta name="description" content={description} />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content={fullTitle} />
+<meta property="twitter:description" content={description} />
