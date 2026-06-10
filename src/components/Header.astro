@@ -284,6 +284,8 @@ const isCurrent = (href: string) => {
 
 	// --- Lenis 惯性平滑滚动 ---
 	let lenis: Lenis | null = null;
+	// 跨马灯随滚动速度轻微倾斜（由 initMotion 赋值）
+	let marqueeSkew: ((velocity: number) => void) | null = null;
 	if (!reduceMotion) {
 		lenis = new Lenis({
 			duration: 1.15,
@@ -292,9 +294,10 @@ const isCurrent = (href: string) => {
 			wheelMultiplier: 1,
 			touchMultiplier: 1.6,
 		});
-		lenis.on('scroll', (e: { scroll: number }) => {
+		lenis.on('scroll', (e: { scroll: number; velocity: number }) => {
 			ScrollTrigger.update();
 			onScroll(e.scroll);
+			marqueeSkew?.(e.velocity);
 		});
 		gsap.ticker.add((time) => lenis!.raf(time * 1000));
 		gsap.ticker.lagSmoothing(0);
@@ -386,6 +389,18 @@ const isCurrent = (href: string) => {
 				gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.4)' });
 			});
 		});
+
+		// 跨马灯：随滚动速度轻微倾斜（作用于外层，不干扰 CSS 平移动画）
+		const skewTargets = gsap.utils.toArray<HTMLElement>('[data-marquee-skew]');
+		if (skewTargets.length) {
+			const setters = skewTargets.map((t) =>
+				gsap.quickTo(t, 'skewX', { duration: 0.5, ease: 'power3' }),
+			);
+			marqueeSkew = (velocity) => {
+				const sk = gsap.utils.clamp(-9, 9, velocity * 0.5);
+				setters.forEach((s) => s(sk));
+			};
+		}
 
 		// 站内锚点平滑滚动
 		if (lenis) {

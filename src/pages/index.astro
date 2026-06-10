@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Cover from '../components/Cover.astro';
 import JournalCard from '../components/JournalCard.astro';
+import Marquee from '../components/Marquee.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_DESCRIPTION, TOGETHER_SINCE, LOVE_QUOTE } from '../consts';
 
@@ -81,12 +82,21 @@ const daysTogether = Math.max(
 			</div>
 		</section>
 
+		<!-- 跨马灯 #1 -->
+		<Marquee
+			items={['一起去很远的地方', 'WJ ♥ GB', '把日子过成诗', '山海皆可期', '此刻即远方']}
+			speed={34}
+		/>
+
 		<!-- 最新一程 -->
 		{
 			featured && (
 				<section class="featured">
 					<div class="rule" data-reveal>
-						<span class="kicker">最新一程</span>
+						<span class="head-label">
+							<span class="chapter-no">.01</span>
+							<span class="kicker">最新一程</span>
+						</span>
 					</div>
 					<a class="feature-card" href={`/journal/${featured.id}/`} data-reveal>
 						<div class="feature-media">
@@ -120,7 +130,10 @@ const daysTogether = Math.max(
 			rest.length > 0 && (
 				<section class="gallery-section">
 					<div class="rule section-head" data-reveal>
-						<span class="kicker">近期旅程</span>
+						<span class="head-label">
+							<span class="chapter-no">.02</span>
+							<span class="kicker">近期旅程</span>
+						</span>
 						<a class="more-link" href="/journal/">
 							全部 <span aria-hidden="true">→</span>
 						</a>
@@ -143,6 +156,13 @@ const daysTogether = Math.max(
 				>
 			</p>
 		</section>
+
+		<!-- 跨马灯 #2 -->
+		<Marquee
+			items={['EVERY DAY WITH YOU', '在一起的每一天', 'FARAWAY TOGETHER', '我们的小宇宙']}
+			reverse={true}
+			speed={38}
+		/>
 
 		<!-- CTA -->
 		<section class="cta" data-reveal>
@@ -296,6 +316,17 @@ const daysTogether = Math.max(
 	.rule {
 		padding-top: 1.2rem;
 		border-top: 1px solid var(--border);
+	}
+	.head-label {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.85rem;
+	}
+	.chapter-no {
+		font-family: var(--font-mono);
+		font-size: 0.76rem;
+		letter-spacing: 0.1em;
+		color: var(--accent);
 	}
 	.section-head {
 		display: flex;

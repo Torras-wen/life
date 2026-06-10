@@ -1,0 +1,103 @@
+---
+// 无限滚动跑马灯文字条 —— Longbow / awwwards 风格的高级编辑元素。
+// 大字衬线，奇偶词「实心 / 镂空描边」交替，词间以 ✦ 分隔。
+// 由两组完全相同的内容拼接而成，CSS 平移 -50% 实现无缝循环。
+// 倾斜（随滚动速度）由 Header.astro 的脚本作用于外层 .marquee__skew。
+interface Props {
+	/** 循环展示的词条。 */
+	items: string[];
+	/** 是否反向（向右）滚动。 */
+	reverse?: boolean;
+	/** 一次循环的秒数，越小越快。 */
+	speed?: number;
+	class?: string;
+}
+
+const { items, reverse = false, speed = 30, class: className } = Astro.props;
+---
+
+<div class:list={['marquee', className]} aria-hidden="true">
+	<div class="marquee__skew" data-marquee-skew>
+		<div
+			class="marquee__track"
+			style={`--mq-speed:${speed}s; --mq-dir:${reverse ? 'reverse' : 'normal'};`}
+		>
+			{
+				[0, 1].map(() => (
+					<div class="marquee__group">
+						{items.map((item) => (
+							<span class="marquee__item">
+								<span class="marquee__text">{item}</span>
+								<span class="marquee__star" aria-hidden="true">
+									✦
+								</span>
+							</span>
+						))}
+					</div>
+				))
+			}
+		</div>
+	</div>
+</div>
+
+<style>
+	.marquee {
+		overflow: hidden;
+		width: 100vw;
+		margin-left: 50%;
+		transform: translateX(-50%);
+		border-block: 1px solid var(--border);
+		padding-block: clamp(0.9rem, 2.2vw, 1.6rem);
+		user-select: none;
+	}
+	.marquee__skew {
+		will-change: transform;
+	}
+	.marquee__track {
+		display: flex;
+		width: max-content;
+		animation: marquee-scroll var(--mq-speed) linear infinite;
+		animation-direction: var(--mq-dir);
+		will-change: transform;
+	}
+	.marquee__group {
+		display: flex;
+		flex: none;
+	}
+	.marquee__item {
+		display: inline-flex;
+		align-items: center;
+		gap: clamp(1.3rem, 3.2vw, 2.8rem);
+		padding-right: clamp(1.3rem, 3.2vw, 2.8rem);
+	}
+	.marquee__text {
+		font-family: var(--font-serif);
+		font-size: clamp(1.7rem, 5vw, 3.4rem);
+		font-weight: 560;
+		font-style: italic;
+		letter-spacing: -0.01em;
+		line-height: 1;
+		color: var(--text);
+		white-space: nowrap;
+	}
+	/* 奇偶交替：镂空描边字，编辑感更强 */
+	.marquee__item:nth-child(even) .marquee__text {
+		color: transparent;
+		-webkit-text-stroke: 1px var(--text-muted);
+	}
+	.marquee__star {
+		color: var(--accent);
+		font-size: clamp(0.9rem, 2vw, 1.5rem);
+	}
+
+	@keyframes marquee-scroll {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.marquee__track {
+			animation: none;
+		}
+	}
+</style>
