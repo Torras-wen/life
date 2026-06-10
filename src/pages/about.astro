@@ -17,6 +17,22 @@ const ways = [
 	{ n: '03', t: '不赶路', d: '把通勤也当成风景，地铁与渡轮都算数。' },
 	{ n: '04', t: '带回家', d: '一张车票、一颗石子，都是这趟旅程的证据。' },
 ];
+
+// 两位主人。名字、角色和介绍都可以随意改。
+const people = [
+	{
+		initial: 'WJ',
+		name: 'WJ',
+		role: '出发的人',
+		d: '负责规划路线，也负责把车开到没有信号的地方。地图上每一个想去的点，多半是他先标下的。',
+	},
+	{
+		initial: 'GB',
+		name: 'GB',
+		role: '记得的人',
+		d: '总能找到巷子里最好吃的那家，也总在当天把心情写下来。这本册子里温柔的句子，多半出自她手。',
+	},
+];
 ---
 
 <BaseLayout title="关于" description="关于这本记录生活与旅行的册子。">
@@ -24,20 +40,20 @@ const ways = [
 		<section class="page-hero">
 			<span class="kicker" data-reveal>ABOUT</span>
 			<h1 class="hero-title">
-				<span class="line">关于这本册子</span>
+				<span class="line">关于我们俩</span>
 			</h1>
 			<p class="lede" data-reveal>
-				这里不写攻略，也不赶热点。只是把走过的路、见过的光，和那些舍不得忘记的瞬间，慢慢存下来。
+				这里不写攻略，也不赶热点。只是 WJ 和 GB 两个人，把一起走过的路、见过的光，和那些舍不得忘记的瞬间，慢慢存下来。
 			</p>
 		</section>
 
 		<section class="intro" data-reveal>
 			<p>
-				我喜欢出发，也喜欢回来。喜欢在陌生的城市迷一次路，也喜欢在熟悉的街角发现新的咖啡馆。比起「去过」，我更在意「记得」——
-				记得那天的风，记得那碗汤的温度，记得自己当时在想什么。
+				我们一个叫 WJ，一个叫 GB。喜欢一起出发，也喜欢一起回来；喜欢在陌生的城市迷一次路，也喜欢在熟悉的街角分享同一杯咖啡。比起「去过」，我们更在意「一起记得」——
+				记得那天的风，记得那碗汤的温度，记得当时彼此在想什么。
 			</p>
 			<p>
-				于是有了这个地方。它像一本可以反复翻阅的相册，又像一封写给未来自己的信。如果你也路过这里，欢迎一起慢慢看。
+				于是有了这个地方。它像一本两个人一起翻阅的相册，又像写给未来的我们的信。如果你也路过这里，欢迎一起慢慢看。
 			</p>
 		</section>
 
@@ -56,7 +72,7 @@ const ways = [
 		</section>
 
 		<section class="ways">
-			<div class="rule" data-reveal><span class="kicker">我的方式</span></div>
+			<div class="rule" data-reveal><span class="kicker">我们的方式</span></div>
 			<ul class="way-list">
 				{
 					ways.map((w) => (
@@ -70,6 +86,25 @@ const ways = [
 					))
 				}
 			</ul>
+		</section>
+
+		<section class="duo">
+			<div class="rule" data-reveal><span class="kicker">我们是谁</span></div>
+			<div class="duo-grid">
+				{
+					people.map((p) => (
+						<div class="person-card" data-reveal>
+							<span class="person-badge">{p.initial}</span>
+							<div class="person-info">
+								<h3>{p.name}</h3>
+								<span class="person-role">{p.role}</span>
+								<p>{p.d}</p>
+							</div>
+						</div>
+					))
+				}
+			</div>
+			<p class="duo-note" data-reveal>WJ &amp; GB —— 一个负责出发，一个负责记得。</p>
 		</section>
 
 		{
@@ -90,7 +125,7 @@ const ways = [
 		<section class="contact" data-reveal>
 			<div class="contact-inner">
 				<h2>想一起走走，或随便聊聊？</h2>
-				<p>路上见，或者写封信给我。</p>
+				<p>路上见，或者写封信给我们。</p>
 				<div class="contact-actions">
 					<a class="button button-primary" href="mailto:hello@example.com">写封信</a>
 					<a class="button button-ghost" href="/journal/">翻翻旅程</a>
@@ -209,6 +244,71 @@ const ways = [
 		color: var(--text-muted);
 	}
 
+	/* 我们是谁 */
+	.duo {
+		margin-top: 5rem;
+	}
+	.duo-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.5rem;
+	}
+	.person-card {
+		display: flex;
+		gap: 1.2rem;
+		align-items: flex-start;
+		padding: 1.8rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		background: var(--surface);
+		transition:
+			border-color 0.25s ease,
+			transform 0.25s ease;
+	}
+	.person-card:hover {
+		border-color: var(--accent);
+		transform: translateY(-3px);
+	}
+	.person-badge {
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: 3.2rem;
+		height: 3.2rem;
+		border-radius: 50%;
+		background: var(--accent-soft);
+		color: var(--accent);
+		font-family: var(--font-serif);
+		font-weight: 600;
+		font-size: 1.05rem;
+		letter-spacing: 0.03em;
+	}
+	.person-info h3 {
+		margin: 0;
+		font-size: 1.3rem;
+	}
+	.person-role {
+		display: block;
+		margin: 0.2rem 0 0.6rem;
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--text-faint);
+	}
+	.person-info p {
+		margin: 0;
+		color: var(--text-muted);
+		font-size: 0.96rem;
+	}
+	.duo-note {
+		margin: 1.8rem 0 0;
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: 1.05rem;
+		color: var(--text-muted);
+	}
+
 	.places {
 		margin-top: 5rem;
 	}
@@ -268,6 +368,9 @@ const ways = [
 
 	@media (max-width: 760px) {
 		.record-grid {
+			grid-template-columns: 1fr;
+		}
+		.duo-grid {
 			grid-template-columns: 1fr;
 		}
 	}

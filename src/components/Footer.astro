@@ -1,5 +1,5 @@
 ---
-import { SITE_TITLE, SITE_TITLE_EN, NAV_LINKS } from '../consts';
+import { SITE_TITLE, SITE_TITLE_EN, SITE_AUTHORS, NAV_LINKS } from '../consts';
 
 const today = new Date();
 ---
@@ -10,7 +10,7 @@ const today = new Date();
 			<a class="footer-name" href="/">
 				{SITE_TITLE}<span class="dot" aria-hidden="true">.</span>
 			</a>
-			<p>把走过的路、见过的光，慢慢存成一本可以翻阅的册子。</p>
+			<p>WJ 与 GB，把一起走过的路、见过的光，慢慢存成一本可以翻阅的册子。</p>
 		</div>
 
 		<nav class="footer-links" aria-label="页脚导航">
@@ -19,8 +19,8 @@ const today = new Date();
 	</div>
 
 	<div class="footer-bottom wrapper">
-		<span>&copy; {today.getFullYear()} {SITE_TITLE_EN}</span>
-		<span class="made">途中记录 · 用 Astro 搭建</span>
+		<span>&copy; {today.getFullYear()} {SITE_TITLE_EN} · {SITE_AUTHORS}</span>
+		<span class="made">两个人的途中记录</span>
 	</div>
 </footer>
 
