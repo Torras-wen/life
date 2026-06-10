@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+# ── 后端 ──────────────────────────────────────────────
+# 内容直接读写 GitHub 仓库；在后台保存即自动 commit，并触发 Cloudflare 重新部署。
+backend:
+  name: github
+  repo: Torras-wen/life
+  branch: main
+  # 自己一个人用：登录页点「Sign In with Token」，粘贴 GitHub 个人访问令牌(PAT)即可，
+  # 无需自建 OAuth 服务器。若以后要给非技术用户用，再部署 sveltia-cms-auth Worker，
+  # 并在此处补一行  base_url: https://你的worker地址  即可。
+
+# ── 媒体（图片上传）────────────────────────────────────
+# 后台上传的图片实际保存到仓库的 public/assets/uploads/，
+# 写进文章里的路径则是 /assets/uploads/xxx.jpg（站点根路径，<img> 可直接引用）。
+media_folder: public/assets/uploads
+public_folder: /assets/uploads
+
+# ── 内容集合 ──────────────────────────────────────────
+collections:
+  - name: journal
+    label: 旅程日志
+    label_singular: 一篇日志
+    description: 记录每一段旅行 / 生活片段。封面留空会自动生成程序化渐变图。
+    folder: src/content/journal
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    identifier_field: title
+    summary: '{{fields.location}} · {{fields.title}}'
+    sortable_fields:
+      - date
+      - title
+    fields:
+      - label: 标题
+        name: title
+        widget: string
+        hint: 如「在大理，把日子过慢」
+
+      - label: 地点
+        name: location
+        widget: string
+        hint: 如「云南 · 大理」
+
+      - label: 日期
+        name: date
+        widget: datetime
+        format: 'YYYY-MM-DD'
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        picker_utc: false
+
+      - label: 一句话摘要
+        name: summary
+        widget: text
+        hint: 列表页与分享摘要会用到
+
+      - label: 封面照片
+        name: cover
+        widget: image
+        required: false
+        hint: 从这里上传你自己的照片；留空则自动生成渐变封面。
+
+      - label: 封面替代文本
+        name: coverAlt
+        widget: string
+        required: false
+        hint: 一句话描述照片内容，利于无障碍与 SEO
+
+      - label: 标签
+        name: tags
+        widget: list
+        required: false
+        field:
+          label: 标签
+          name: tag
+          widget: string
+
+      - label: 心情 / 天气
+        name: mood
+        widget: string
+        required: false
+        hint: 一行字，如「冷，但天很蓝」
+
+      - label: 首页精选
+        name: featured
+        widget: boolean
+        default: false
+        hint: 开启后作为首页「最新一程」展示
+
+      - label: 正文
+        name: body
+        widget: markdown
