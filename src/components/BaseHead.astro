@@ -33,6 +33,11 @@ const fullTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`;
 		// 本会话已访问过则跳过进场动画（避免每次导航都重播）
 		try {
 			if (sessionStorage.getItem('visited')) document.documentElement.classList.add('visited');
+			// 由页面过渡跳转进来：幕布初始盖着，入场时退场
+			if (sessionStorage.getItem('pageTransition')) {
+				document.documentElement.classList.add('is-entering');
+				sessionStorage.removeItem('pageTransition');
+			}
 		} catch (e) {}
 	})();
 </script>

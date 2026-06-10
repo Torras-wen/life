@@ -51,6 +51,17 @@ collections:
         date_format: 'YYYY-MM-DD'
         time_format: false
         picker_utc: false
+        hint: 出发日 / 这篇的主日期
+
+      - label: 结束日期
+        name: dateEnd
+        widget: datetime
+        required: false
+        format: 'YYYY-MM-DD'
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        picker_utc: false
+        hint: 多日旅行填这里，会显示成「出发日 – 结束日」；单天留空
 
       - label: 一句话摘要
         name: summary
@@ -96,6 +107,29 @@ collections:
         widget: boolean
         default: false
         hint: 开启后作为首页「最新一程」展示
+
+      - label: 按天行程
+        name: itinerary
+        widget: list
+        required: false
+        label_singular: 一天
+        summary: '{{fields.day}} · {{fields.title}}'
+        hint: 每天干了什么，会渲染成一条时间线；可加多条
+        fields:
+          - { label: 第几天 / 日期, name: day, widget: string, hint: '如 Day 1 或 1.18' }
+          - { label: 这天标题, name: title, widget: string }
+          - { label: 这天详情, name: note, widget: text, required: false }
+
+      - label: 多图相册
+        name: gallery
+        widget: list
+        required: false
+        label_singular: 一张照片
+        summary: '{{fields.caption}}'
+        hint: 一篇可以传很多张照片，会以瓀布流画廊展示
+        fields:
+          - { label: 照片, name: image, widget: image }
+          - { label: 图说, name: caption, widget: string, required: false }
 
       - label: 正文
         name: body

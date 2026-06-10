@@ -42,6 +42,12 @@ const { data } = entry;
 			<h1 class="hero-title" data-reveal>{data.title}</h1>
 			<div class="entry-meta" data-reveal>
 				<FormattedDate date={data.date} />
+				{data.dateEnd && (
+					<>
+						<span class="date-sep" aria-hidden="true">–</span>
+						<FormattedDate date={data.dateEnd} />
+					</>
+				)}
 				{data.author && (
 					<span class="byline">· {data.author === '一起' ? '我们一起写下' : `${data.author} 记录`}</span>
 				)}
@@ -70,6 +76,47 @@ const { data } = entry;
 		<article class="prose">
 			<Content />
 		</article>
+
+		{
+			data.itinerary.length > 0 && (
+				<section class="itinerary" data-reveal>
+					<div class="sec-head">
+						<span class="chapter-no">.行程</span>
+						<h2>每天的足迹</h2>
+					</div>
+					<ol class="trip">
+						{data.itinerary.map((d) => (
+							<li class="trip-day">
+								<span class="trip-daynum">{d.day}</span>
+								<div class="trip-body">
+									<h3>{d.title}</h3>
+									{d.note && <p>{d.note}</p>}
+								</div>
+							</li>
+						))}
+					</ol>
+				</section>
+			)
+		}
+
+		{
+			data.gallery.length > 0 && (
+				<section class="gallery-sec" data-reveal>
+					<div class="sec-head">
+						<span class="chapter-no">.相册</span>
+						<h2>这一路的照片</h2>
+					</div>
+					<div class="photo-grid">
+						{data.gallery.map((g) => (
+							<figure class="photo">
+								<img src={g.image} alt={g.caption || ''} loading="lazy" decoding="async" />
+								{g.caption && <figcaption>{g.caption}</figcaption>}
+							</figure>
+						))}
+					</div>
+				</section>
+			)
+		}
 
 		<nav class="entry-nav" aria-label="相邻旅程">
 			{
@@ -173,6 +220,113 @@ const { data } = entry;
 		border-radius: var(--radius-lg);
 		box-shadow: var(--shadow-sm);
 		margin: 2rem 0;
+	}
+
+	.date-sep {
+		margin: 0 0.5rem;
+		color: var(--text-faint);
+	}
+
+	/* 按天行程 + 画廊 共用区头 */
+	.itinerary,
+	.gallery-sec {
+		max-width: var(--container);
+		margin: 4rem auto 0;
+	}
+	.sec-head {
+		display: flex;
+		align-items: baseline;
+		gap: 0.85rem;
+		padding-top: 1.2rem;
+		margin-bottom: 1.8rem;
+		border-top: 1px solid var(--border);
+	}
+	.sec-head h2 {
+		margin: 0;
+		font-size: clamp(1.4rem, 3vw, 1.9rem);
+	}
+	.chapter-no {
+		font-family: var(--font-mono);
+		font-size: 0.76rem;
+		letter-spacing: 0.1em;
+		color: var(--accent);
+	}
+
+	/* 行程时间线 */
+	.trip {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-left: 2px solid var(--border);
+	}
+	.trip-day {
+		position: relative;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 1.4rem;
+		padding: 0 0 2.2rem 1.8rem;
+	}
+	.trip-day:last-child {
+		padding-bottom: 0;
+	}
+	.trip-day::before {
+		content: '';
+		position: absolute;
+		left: -7px;
+		top: 6px;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: var(--accent);
+		box-shadow: 0 0 0 4px var(--bg);
+	}
+	.trip-daynum {
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		color: var(--accent);
+		white-space: nowrap;
+		padding-top: 0.2rem;
+	}
+	.trip-body h3 {
+		margin: 0 0 0.35rem;
+		font-size: 1.25rem;
+	}
+	.trip-body p {
+		margin: 0;
+		color: var(--text-muted);
+	}
+
+	/* 多图画廊 —— 瀑布流 */
+	.photo-grid {
+		columns: 2;
+		column-gap: 1rem;
+	}
+	@media (min-width: 720px) {
+		.photo-grid {
+			columns: 3;
+		}
+	}
+	.photo {
+		margin: 0 0 1rem;
+		break-inside: avoid;
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		background: var(--bg-subtle);
+		box-shadow: var(--shadow-sm);
+	}
+	.photo img {
+		display: block;
+		width: 100%;
+		height: auto;
+		transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+	.photo:hover img {
+		transform: scale(1.05);
+	}
+	.photo figcaption {
+		padding: 0.5rem 0.85rem;
+		font-size: 0.82rem;
+		color: var(--text-muted);
 	}
 
 	/* 邻程导航 */
